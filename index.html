@@ -216,13 +216,16 @@ optgroup option{font-weight:400;padding-left:8px}
 /* TOP10 desktop header/rows hidden on mobile */
 @media(max-width:768px){
   .t10-desk{display:none !important}
-  .t10-mob{display:block}
+  .rr.t10-desk{display:none !important}
+  .rh.t10-desk{display:none !important}
+  .t10-mob{display:block !important}
   .rk-desk{display:none !important}
-  .rk-mob{display:block}
+  .rr.rk-desk{display:none !important}
+  .rk-mob{display:block !important}
 }
 @media(min-width:769px){
-  .t10-mob{display:none}
-  .rk-mob{display:none}
+  .t10-mob{display:none !important}
+  .rk-mob{display:none !important}
 }
 /* Card shared styles */
 .mob-card{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 14px}
@@ -494,7 +497,7 @@ function rOv(){
     <div class="kc"><div class="kl">對比 LY 收入</div><div class="kv ${cls(yR)}">${fPP(yR)}</div><div class="ks">對比 LY 淨利 <span class="${cls(yN)}">${fPP(yN)}</span></div></div>`;
   rGrp('tb-d',ss,'課別');rGrp('tb-t',ss,'門市型態');
   const top=ss.filter(s=>s['營業淨利']>0).sort((a,b)=>b['營業淨利']-a['營業淨利']).slice(0,10);
-  const _t10cols='32px 1fr 90px 85px 92px 85px 80px 55px';
+  const _t10cols='32px minmax(120px,200px) 100px 90px 100px 90px 80px 60px';
   document.getElementById('ov-top').innerHTML=
     `<div class="rh t10-desk" style="grid-template-columns:${_t10cols}">
       <div style="text-align:center">#</div><div>門市</div><div>M04 收入</div>
@@ -739,7 +742,7 @@ function rRank(){
     ni_ytd:(a,b)=>b['營業淨利_ytd26']-a['營業淨利_ytd26'],rev:(a,b)=>b['營業收入淨額']-a['營業收入淨額'],
     nir:(a,b)=>b['ni_rate']-a['ni_rate'],yoy:(a,b)=>(b['rev_yoy']??-99)-(a['rev_yoy']??-99)};
   const sorted=[...ss].sort(fns[sort]||fns.ni).slice(0,n===99?ss.length:n);
-  const _rkCols='32px 1fr 85px 80px 70px 85px 80px 72px 72px 62px 62px 62px 52px';
+  const _rkCols='32px minmax(100px,180px) 85px 80px 70px 85px 80px 72px 72px 62px 62px 62px 52px';
   document.getElementById('rrows').innerHTML=sorted.map((s,i)=>{
     const nc2=['gold','silver','bronze'][i]||'';
     const niC=nc(s['營業淨利']),niYC=nc(s['營業淨利_ytd26']);
