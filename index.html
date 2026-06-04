@@ -214,6 +214,41 @@ optgroup option{font-weight:400;padding-left:8px}
 @media(max-width:480px){
   .top10-hdr,.top10-row{grid-template-columns:24px 1fr 72px 72px 62px 40px}
 }
+
+/* ── 手機卡片式 TOP10 & RANK ── */
+@media(max-width:768px){
+  /* TOP10: hide table header, show cards */
+  .top10-hdr{display:none}
+  .top10-row{
+    display:flex;flex-direction:column;padding:12px 14px;gap:0;
+    border-bottom:1px solid var(--border)
+  }
+  .top10-row .t10-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .top10-row .t10-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .top10-row .t10-cell{background:var(--bg3);border-radius:6px;padding:7px 9px}
+  .top10-row .t10-cell .tc-l{font-size:10px;color:var(--text3);margin-bottom:2px;font-weight:600}
+  .top10-row .t10-cell .tc-v{font-size:13px;font-weight:700}
+  .top10-row .t10-hr{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding-top:6px;border-top:1px solid var(--border);font-size:11px;color:var(--text2)}
+  /* hide individual desktop cols */
+  .top10-row>div:not(.t10-meta):not(.t10-grid):not(.t10-hr):not(.rnum){display:none}
+
+  /* RANK: card style */
+  .rank-hdr-desktop{display:none}
+  .rank-card{
+    background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 14px
+  }
+  .rank-card .rc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .rank-card .rc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
+  .rank-card .rc-grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .rank-card .rcc{background:var(--bg3);border-radius:6px;padding:6px 8px}
+  .rank-card .rcc .rcl{font-size:10px;color:var(--text3);margin-bottom:2px;font-weight:600}
+  .rank-card .rcc .rcv{font-size:12px;font-weight:700}
+  .rank-card .rc-bot{font-size:11px;color:var(--text2);display:flex;gap:12px;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+}
+@media(min-width:769px){
+  .rank-card{display:none}
+  .rank-hdr-desktop{display:grid}
+}
 </style>
 </head>
 <body>
@@ -691,22 +726,55 @@ function rRank(){
     ni_ytd:(a,b)=>b['營業淨利_ytd26']-a['營業淨利_ytd26'],rev:(a,b)=>b['營業收入淨額']-a['營業收入淨額'],
     nir:(a,b)=>b['ni_rate']-a['ni_rate'],yoy:(a,b)=>(b['rev_yoy']??-99)-(a['rev_yoy']??-99)};
   const sorted=[...ss].sort(fns[sort]||fns.ni).slice(0,n===99?ss.length:n);
-  document.getElementById('rrows').innerHTML=sorted.map((s,i)=>`
-    <div class="rr" style="grid-template-columns:32px 1fr 85px 80px 70px 85px 80px 72px 72px 62px 62px 62px 52px">
-      <div class="rnum ${['gold','silver','bronze'][i]||''}">${i+1}</div>
+  const rankCols='32px 1fr 85px 80px 70px 85px 80px 72px 72px 62px 62px 62px 52px';
+  document.getElementById('rrows').innerHTML=sorted.map((s,i)=>{
+    const numCls=['gold','silver','bronze'][i]||'';
+    const niC=nc(s['營業淨利']),niYC=nc(s['營業淨利_ytd26']);
+    // Desktop row
+    const desk=`<div class="rr rank-hdr-desktop" style="grid-template-columns:${rankCols}">
+      <div class="rnum ${numCls}">${i+1}</div>
       <div><div class="rn">${s['倉庫名稱']}</div><div class="rd">${s['倉庫編號']} · ${s['轄區負責人']} · ${gb(s['級別'])}</div></div>
       <div>${fM(s['營業收入淨額'])}</div>
-      <div style="color:${nc(s['營業淨利'])};font-weight:600">${fM(s['營業淨利'])}</div>
-      <div style="color:${nc(s['ni_rate'])}">${fP(s['ni_rate'])}</div>
+      <div style="color:${niC};font-weight:600">${fM(s['營業淨利'])}</div>
+      <div style="color:${niC}">${fP(s['ni_rate'])}</div>
       <div>${fM(s['營業收入淨額_ytd26'])}</div>
-      <div style="color:${nc(s['營業淨利_ytd26'])};font-weight:600">${fM(s['營業淨利_ytd26'])}</div>
-      <div style="color:${nc(s['ni_rate_ytd26']||0)}">${fP(s['ni_rate_ytd26']||0)}</div>
+      <div style="color:${niYC};font-weight:600">${fM(s['營業淨利_ytd26'])}</div>
+      <div style="color:${niYC}">${fP(s['ni_rate_ytd26']||0)}</div>
       <div class="${cls(s['rev_yoy'])}">${fPP(s['rev_yoy'])}</div>
       <div style="color:var(--text2)">${fP(s['dept_rate'])}</div>
       <div style="color:var(--text2)">${fP(s['store_rate'])}</div>
       <div style="color:var(--text2)">${fP(s['hq_rate'])}</div>
       <div style="font-size:11px;color:var(--text2)">正${s['全職']} 兼${s['兼職']}</div>
-    </div>`).join('');
+    </div>`;
+    // Mobile card
+    const mob=`<div class="rank-card">
+      <div class="rc-top">
+        <div class="rnum ${numCls}" style="width:28px;flex-shrink:0">${i+1}</div>
+        <div style="flex:1;min-width:0">
+          <div class="rn">${s['倉庫名稱']}</div>
+          <div class="rd">${s['倉庫編號']} · ${s['轄區負責人']} · ${gb(s['級別'])}</div>
+        </div>
+      </div>
+      <div class="rc-grid">
+        <div class="rcc"><div class="rcl">M04 收入</div><div class="rcv">${fM(s['營業收入淨額'])}</div></div>
+        <div class="rcc"><div class="rcl">M04 淨利</div><div class="rcv" style="color:${niC}">${fM(s['營業淨利'])}</div></div>
+        <div class="rcc"><div class="rcl">M04 淨利率</div><div class="rcv" style="color:${niC}">${fP(s['ni_rate'])}</div></div>
+        <div class="rcc"><div class="rcl">YTD 收入</div><div class="rcv">${fM(s['營業收入淨額_ytd26'])}</div></div>
+        <div class="rcc"><div class="rcl">YTD 淨利</div><div class="rcv" style="color:${niYC}">${fM(s['營業淨利_ytd26'])}</div></div>
+        <div class="rcc"><div class="rcl">YTD 淨利率</div><div class="rcv" style="color:${niYC}">${fP(s['ni_rate_ytd26']||0)}</div></div>
+      </div>
+      <div class="rc-grid2">
+        <div class="rcc"><div class="rcl">對比 LY</div><div class="rcv ${cls(s['rev_yoy'])}">${fPP(s['rev_yoy'])}</div></div>
+        <div class="rcc"><div class="rcl">百貨費率</div><div class="rcv">${fP(s['dept_rate'])}</div></div>
+        <div class="rcc"><div class="rcl">門市費率</div><div class="rcv">${fP(s['store_rate'])}</div></div>
+      </div>
+      <div class="rc-bot">
+        <span>正職 ${s['全職']} · 兼職 ${s['兼職']}</span>
+        <span>總部費率 ${fP(s['hq_rate'])}</span>
+      </div>
+    </div>`;
+    return desk+mob;
+  }).join('');
 }
 
 // ─── INIT ───
