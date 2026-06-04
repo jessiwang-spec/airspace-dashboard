@@ -240,10 +240,10 @@ table.dt tr:last-child td{border-bottom:none}
   <div id="login-box">
     <div class="logo">
       <div class="brand">AIR<span>SPACE</span></div>
-      <div class="sub">損益儀表板 · 請先登入</div>
+      <div class="sub">損益儀表板 · 輸入密碼即可登入</div>
     </div>
     <label for="li-user">帳號</label>
-    <input id="li-user" type="email" placeholder="your@airspaceonline.com" autocomplete="username">
+    <input id="li-user" type="email" placeholder="任意帳號皆可" autocomplete="username">
     <label for="li-pwd">密碼</label>
     <input id="li-pwd" type="password" placeholder="••••••" autocomplete="current-password">
     <button id="login-btn" onclick="doLogin()">登 入</button>
@@ -274,7 +274,7 @@ async function doLogin(){
   const p=document.getElementById('li-pwd').value;
   const hu=await sha256(u);
   const hp=await sha256(p);
-  const ok=(hu==='c492b97837bdbc9229018666ea7fbc2ee44d34869173d94dbc195392064ae113'&&hp==='f49e3b3e84698c3de729c44b905dc05d4f60ceff34ee13ae1d75b6385f1b00ee');
+  const ok=(hp==='f49e3b3e84698c3de729c44b905dc05d4f60ceff34ee13ae1d75b6385f1b00ee');
   if(ok){
     sessionStorage.setItem('as_auth','1');
     // Log to Google Sheets
@@ -803,7 +803,7 @@ async function doLogin(){
   const u=document.getElementById('li-user').value.trim().toLowerCase();
   const p=document.getElementById('li-pwd').value;
   const hu=await sha256(u),hp=await sha256(p);
-  const ok=(hu==='c492b97837bdbc9229018666ea7fbc2ee44d34869173d94dbc195392064ae113'&&hp==='f49e3b3e84698c3de729c44b905dc05d4f60ceff34ee13ae1d75b6385f1b00ee');
+  const ok=(hp==='f49e3b3e84698c3de729c44b905dc05d4f60ceff34ee13ae1d75b6385f1b00ee');
   if(ok){
     sessionStorage.setItem('as_auth','1');
     try{
