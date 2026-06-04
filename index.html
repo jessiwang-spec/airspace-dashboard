@@ -131,6 +131,9 @@ optgroup option{font-weight:400;padding-left:8px}
    RWD — 平板 (≤768px) & 手機 (≤480px)
 ═══════════════════════════════════════════════ */
 @media(max-width:768px){
+  #ov-top,#rank-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #ov-top .rh,#ov-top .rr,#rank-wrap .rh,#rank-wrap .rr{min-width:700px}
+
   /* Topbar */
   .topbar{padding:0 12px;flex-wrap:wrap}
   .brand{font-size:13px;padding:10px 12px 10px 0;margin-right:8px}
@@ -210,36 +213,7 @@ optgroup option{font-weight:400;padding-left:8px}
 .rank-hdr-desktop{display:grid}
 }
 
-/* ═══════════════════════════════
-   MOBILE CARD LAYOUT (≤768px)
-═══════════════════════════════ */
-/* TOP10 desktop header/rows hidden on mobile */
-@media(max-width:768px){
-  .t10-desk{display:none !important}
-  .rr.t10-desk{display:none !important}
-  .rh.t10-desk{display:none !important}
-  .t10-mob{display:block !important}
-  .rk-desk{display:none !important}
-  .rr.rk-desk{display:none !important}
-  .rk-mob{display:block !important}
 }
-@media(min-width:769px){
-  .t10-mob{display:none !important}
-  .rk-mob{display:none !important}
-}
-/* Card shared styles */
-.mob-card{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 14px}
-.mob-card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.mob-card-num{width:26px;text-align:center;font-weight:700;font-size:14px;flex-shrink:0}
-.mob-card-info{flex:1;min-width:0}
-.mob-card-info .rn{font-size:14px;font-weight:600;color:var(--text)}
-.mob-card-info .rd{font-size:11px;color:var(--text2);margin-top:2px}
-.mob-g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
-.mob-cell{background:var(--bg3);border-radius:7px;padding:8px 9px}
-.mob-cell .ml{font-size:10px;color:var(--text3);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.03em}
-.mob-cell .mv{font-size:13px;font-weight:700;color:var(--text)}
-.mob-foot{font-size:11px;color:var(--text2);display:flex;gap:12px;margin-top:6px;padding-top:6px;border-top:1px solid var(--border);flex-wrap:wrap}
-
 /* ── 主管明細表 ── */
 .mgr-detail-wrap{margin-top:24px}
 .mgr-detail-wrap .sec{margin-bottom:12px}
@@ -436,7 +410,7 @@ async function doLogin(){
     </div>
   </div>
   <div class="scroll-hint"><span>← 左右滑動查看完整資料 →</span></div>
-  <div class="rl">
+  <div class="rl" id="rank-wrap">
     <div class="rh" style="grid-template-columns:32px 1fr 85px 80px 70px 85px 80px 72px 72px 62px 62px 62px 52px">
       <div style="text-align:center">#</div><div>門市</div>
       <div>M04 收入</div><div>M04 淨利</div><div>淨利率</div>
@@ -533,20 +507,7 @@ function rOv(){
         <div class="${cls(s['ni_rate_ytd26'])}">${fP(s['ni_rate_ytd26']||0)}</div>
         <div style="font-size:11px;color:var(--text2)">正${s['全職']} 兼${s['兼職']}</div>
       </div>`;
-      const mob=`<div class="mob-card t10-mob">
-        <div class="mob-card-top"><div class="mob-card-num ${nc2}">${i+1}</div>
-          <div class="mob-card-info"><div class="rn">${s['倉庫名稱']}</div><div class="rd">${s['課別']} · ${s['轄區負責人']} · ${gb(s['級別'])}</div></div></div>
-        <div class="mob-g3">
-          <div class="mob-cell"><div class="ml">M04 收入</div><div class="mv">${fM(s['營業收入淨額'])}</div></div>
-          <div class="mob-cell"><div class="ml">M04 淨利</div><div class="mv" style="color:${nc_}">${fM(s['營業淨利'])}</div></div>
-          <div class="mob-cell"><div class="ml">M04 淨利率</div><div class="mv" style="color:${nc_}">${fP(s['ni_rate'])}</div></div>
-          <div class="mob-cell"><div class="ml">YTD 收入</div><div class="mv">${fM(s['營業收入淨額_ytd26'])}</div></div>
-          <div class="mob-cell"><div class="ml">YTD 淨利</div><div class="mv" style="color:${nyc}">${fM(s['營業淨利_ytd26'])}</div></div>
-          <div class="mob-cell"><div class="ml">YTD 淨利率</div><div class="mv" style="color:${nyc}">${fP(s['ni_rate_ytd26']||0)}</div></div>
-        </div>
-        <div class="mob-foot"><span>正職 ${s['全職']} · 兼職 ${s['兼職']}</span></div>
-      </div>`;
-      return desk+mob;
+      return desk;
     }).join('');
   drawCoChart(coMetric);
 }
@@ -790,25 +751,7 @@ function rRank(){
       <div style="color:var(--text2)">${fP(s['hq_rate'])}</div>
       <div style="font-size:11px;color:var(--text2)">正${s['全職']} 兼${s['兼職']}</div>
     </div>`;
-    const mob=`<div class="mob-card rk-mob">
-      <div class="mob-card-top"><div class="mob-card-num ${nc2}">${i+1}</div>
-        <div class="mob-card-info"><div class="rn">${s['倉庫名稱']}</div><div class="rd">${s['倉庫編號']} · ${s['轄區負責人']} · ${gb(s['級別'])}</div></div></div>
-      <div class="mob-g3">
-        <div class="mob-cell"><div class="ml">M04 收入</div><div class="mv">${fM(s['營業收入淨額'])}</div></div>
-        <div class="mob-cell"><div class="ml">M04 淨利</div><div class="mv" style="color:${niC}">${fM(s['營業淨利'])}</div></div>
-        <div class="mob-cell"><div class="ml">M04 淨利率</div><div class="mv" style="color:${niC}">${fP(s['ni_rate'])}</div></div>
-        <div class="mob-cell"><div class="ml">YTD 收入</div><div class="mv">${fM(s['營業收入淨額_ytd26'])}</div></div>
-        <div class="mob-cell"><div class="ml">YTD 淨利</div><div class="mv" style="color:${niYC}">${fM(s['營業淨利_ytd26'])}</div></div>
-        <div class="mob-cell"><div class="ml">YTD 淨利率</div><div class="mv" style="color:${niYC}">${fP(s['ni_rate_ytd26']||0)}</div></div>
-      </div>
-      <div class="mob-g3">
-        <div class="mob-cell"><div class="ml">對比 LY</div><div class="mv ${cls(s['rev_yoy'])}">${fPP(s['rev_yoy'])}</div></div>
-        <div class="mob-cell"><div class="ml">百貨費率</div><div class="mv">${fP(s['dept_rate'])}</div></div>
-        <div class="mob-cell"><div class="ml">門市費率</div><div class="mv">${fP(s['store_rate'])}</div></div>
-      </div>
-      <div class="mob-foot"><span>正職 ${s['全職']} · 兼職 ${s['兼職']}</span><span>總部費率 ${fP(s['hq_rate'])}</span></div>
-    </div>`;
-    return desk+mob;
+    return desk;
   }).join('');
 }
 
