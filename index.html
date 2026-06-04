@@ -78,9 +78,9 @@ table.t tbody tr:hover{background:var(--bg3)}
 .mrv{font-size:13px;font-weight:700;color:var(--text)}
 .mc-hr{border-top:1px solid var(--border);padding-top:8px;font-size:12px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap}
 .rl{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--shadow)}
-.rh{display:grid;padding:10px 14px;border-bottom:2px solid var(--border);font-size:12px;color:var(--text2);font-weight:700;letter-spacing:.01em;background:var(--bg3)}
+.rh{display:grid;padding:10px 14px;border-bottom:2px solid var(--border);font-size:12px;color:var(--text2);font-weight:700;letter-spacing:.01em;background:var(--bg3);white-space:nowrap}
 .rh>div{text-align:left}
-.rr{display:grid;padding:10px 14px;border-bottom:1px solid var(--border);transition:background .1s;align-items:center;gap:8px;background:var(--bg2);font-size:13px}
+.rr{display:grid;padding:10px 14px;border-bottom:1px solid var(--border);transition:background .1s;align-items:center;gap:8px;background:var(--bg2);font-size:13px;white-space:nowrap}
 .rr:last-child{border-bottom:none}
 .rr:hover{background:var(--bg3)}
 .rnum{text-align:center;font-weight:700;font-size:13px}
@@ -126,6 +126,94 @@ optgroup option{font-weight:400;padding-left:8px}
 .shake{animation:shake .35s ease}
 #login-overlay.fade-out{animation:fadeOut .4s forwards}
 @keyframes fadeOut{to{opacity:0;pointer-events:none}}
+
+/* ═══════════════════════════════════════════════
+   RWD — 平板 (≤768px) & 手機 (≤480px)
+═══════════════════════════════════════════════ */
+@media(max-width:768px){
+  /* Topbar */
+  .topbar{padding:0 12px;flex-wrap:wrap}
+  .brand{font-size:13px;padding:10px 12px 10px 0;margin-right:8px}
+  .nav-tabs{order:2;width:100%;border-top:1px solid var(--border)}
+  .nav-tab{padding:10px 12px;font-size:12px}
+  /* Filter bar */
+  .fbar{padding:8px 12px;gap:8px}
+  .fbar .fg{flex:1 1 calc(50% - 4px);min-width:0}
+  select.sel{width:100%;min-width:0;font-size:12px}
+  /* Page padding */
+  .page{padding:12px}
+  /* KPI bar: 2 columns */
+  .kbar{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+  .kc{padding:11px 12px}
+  .kv{font-size:18px}
+  .ks{font-size:11px}
+  /* Overview grid → stack */
+  .g2{grid-template-columns:1fr;gap:12px}
+  /* Tables: horizontal scroll */
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.t{min-width:480px}
+  table.t th,table.t td{padding:7px 10px;font-size:12px}
+  /* Mgr cards: 1 column */
+  .mgrid{grid-template-columns:1fr;gap:10px}
+  .mc{padding:14px}
+  .mc-name{font-size:15px}
+  /* Rate cards: 3 col stays OK */
+  /* Cost grid */
+  .cost-grid{grid-template-columns:repeat(2,1fr)}
+  /* Rank rows: horizontal scroll */
+  .rl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .rh,.rr{min-width:680px}
+  /* Trend buttons: wrap nicely */
+  .trend-btns{gap:5px}
+  .tbtn{font-size:11px;padding:4px 9px}
+  /* Store select */
+  #ssel{min-width:0;width:100%;font-size:13px}
+  /* Detail kpi: 2 col */
+  .dkpi{grid-template-columns:repeat(2,1fr)}
+  /* Rate cards: 3 stays */
+  .rcards{grid-template-columns:repeat(3,1fr);gap:8px}
+  .rcv{font-size:18px}
+  /* Chart height reduce */
+  #co-chart,#det-chart{max-height:200px}
+  /* Login box */
+  #login-box{padding:28px 20px 24px}
+}
+
+@media(max-width:480px){
+  .brand{font-size:12px}
+  .nav-tab{padding:9px 10px;font-size:11px}
+  /* KPI: 2 col narrow */
+  .kbar{grid-template-columns:repeat(2,1fr);gap:6px}
+  .kc{padding:10px 10px}
+  .kl{font-size:9px}
+  .kv{font-size:16px}
+  /* Filter: all full width */
+  .fbar .fg{flex:1 1 100%}
+  /* Mgr card rates: 3 col */
+  .mc-rates{grid-template-columns:repeat(3,1fr)}
+  .mrv{font-size:12px}
+  /* Detail: 1 col */
+  .dkpi{grid-template-columns:1fr}
+  .rcards{grid-template-columns:repeat(2,1fr)}
+  /* Cost grid: 1 col */
+  .cost-grid{grid-template-columns:1fr}
+  /* Topbar: hide subtitle */
+  .topbar .brand>span:last-of-type{display:none}
+}
+
+.scroll-hint{display:none;text-align:center;font-size:11px;color:var(--text3);padding:4px 0 6px;letter-spacing:.03em}
+.scroll-hint span{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 10px}
+@media(max-width:768px){.scroll-hint{display:block}}
+
+/* TOP 10 responsive grid */
+.top10-hdr,.top10-row{grid-template-columns:32px 1fr 90px 85px 92px 85px 80px 55px}
+@media(max-width:768px){
+  .top10-hdr,.top10-row{grid-template-columns:28px 1fr 80px 80px 70px 45px}
+  .col-hide-m{display:none}
+}
+@media(max-width:480px){
+  .top10-hdr,.top10-row{grid-template-columns:24px 1fr 72px 72px 62px 40px}
+}
 </style>
 </head>
 <body>
@@ -145,7 +233,7 @@ optgroup option{font-weight:400;padding-left:8px}
   </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded',function(){
+document.addEventListener('DOMContentLoaded',function(){initMobile();
   // Check session
   if(sessionStorage.getItem('as_auth')==='1'){
     document.getElementById('login-overlay').style.display='none';
@@ -214,6 +302,11 @@ async function doLogin(){
     <button class="nav-tab" data-tab="rank">📈 獲利排名</button>
   </div>
 </div>
+<div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:6px 12px;display:none" id="fbar-toggle-wrap">
+  <button onclick="toggleFilters()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;width:100%;text-align:left" id="fbar-toggle-btn">
+    ⚙ 篩選條件 <span id="fbar-arrow">▼</span>
+  </button>
+</div>
 <div class="fbar" id="fbar">
   <div class="fg"><div class="fl">課別</div><select class="sel" id="fd"><option value="">全部</option><option>北區</option><option>中區</option><option>南區</option></select></div>
   <div class="fg"><div class="fl">主管</div><select class="sel" id="fm"><option value="">全部</option></select></div>
@@ -249,6 +342,7 @@ async function doLogin(){
     </div>
   </div>
   <div class="sec">獲利 TOP 10 (M04 淨利) 含 M01–M04 累積</div>
+  <div class="scroll-hint"><span>← 左右滑動查看完整資料 →</span></div>
   <div class="rl" id="ov-top"></div>
 </div>
 
@@ -286,6 +380,7 @@ async function doLogin(){
       <select class="sel" id="rn" onchange="rRank()"><option value="20">前 20</option><option value="30">前 30</option><option value="99">全部</option></select>
     </div>
   </div>
+  <div class="scroll-hint"><span>← 左右滑動查看完整資料 →</span></div>
   <div class="rl">
     <div class="rh" style="grid-template-columns:32px 1fr 85px 80px 70px 85px 80px 72px 72px 62px 62px 62px 52px">
       <div style="text-align:center">#</div><div>門市</div>
@@ -381,12 +476,12 @@ function rOv(){
     <div class="rh" style="grid-template-columns:32px 1fr 90px 85px 92px 85px 80px 55px">
       <div style="text-align:center">#</div><div>門市</div><div style="text-align:left">M04 收入</div><div style="text-align:left">M04 淨利</div><div style="text-align:left">YTD 收入</div><div style="text-align:left">YTD 淨利</div><div style="text-align:left">YTD 淨利率</div><div style="text-align:left">人力</div>
     </div>`+top.map((s,i)=>`
-    <div class="rr" style="grid-template-columns:32px 1fr 90px 85px 92px 85px 80px 55px">
+    <div class="rr top10-row">
       <div class="rnum ${['gold','silver','bronze'][i]||''}">${i+1}</div>
       <div><div class="rn">${s['倉庫名稱']}</div><div class="rd">${s['課別']} · ${s['轄區負責人']} · ${gb(s['級別'])}</div></div>
-      <div>${fM(s['營業收入淨額'])}</div>
+      <div class="col-hide-m">${fM(s['營業收入淨額'])}</div>
       <div style="color:var(--green);font-weight:600">${fM(s['營業淨利'])}</div>
-      <div>${fM(s['營業收入淨額_ytd26'])}</div>
+      <div class="col-hide-m">${fM(s['營業收入淨額_ytd26'])}</div>
       <div style="color:${nc(s['營業淨利_ytd26'])};font-weight:600">${fM(s['營業淨利_ytd26'])}</div>
       <div class="${cls(s['ni_rate_ytd26'])}">${fP(s['ni_rate_ytd26']||0)}</div>
       <div style="font-size:11px;color:var(--text2)">正${s['全職']} 兼${s['兼職']}</div>
@@ -633,6 +728,30 @@ document.querySelectorAll('.nav-tab').forEach(t=>{
 });
 document.querySelectorAll('#fbar select').forEach(s=>s.addEventListener('change',rAll));
 init();rAll();
+// Mobile filter toggle
+function toggleFilters(){
+  const fb=document.getElementById('fbar');
+  const arrow=document.getElementById('fbar-arrow');
+  if(fb.style.display==='none'||fb.style.display===''){
+    fb.style.display='flex';arrow.textContent='▲';
+  } else {
+    fb.style.display='none';arrow.textContent='▼';
+  }
+}
+function initMobile(){
+  const tw=document.getElementById('fbar-toggle-wrap');
+  const fb=document.getElementById('fbar');
+  if(!tw||!fb)return;
+  if(window.innerWidth<=768){
+    tw.style.display='block';
+    fb.style.display='none';
+  } else {
+    tw.style.display='none';
+    fb.style.display='flex';
+  }
+}
+window.addEventListener('resize',initMobile);
+
 </script>
 </div><!-- #dashboard-root -->
 </body>
