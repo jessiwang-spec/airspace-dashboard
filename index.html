@@ -233,6 +233,12 @@ table.dt tr:last-child td{border-bottom:none}
   .mgr-detail-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   table.dt{min-width:620px}
 }
+.tip-wrap{position:relative;display:inline-flex;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tip-icon{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--text3);color:#fff;font-size:9px;font-weight:700;margin-left:5px;flex-shrink:0;user-select:none}
+.tip-box{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1a1d2e;color:#fff;font-size:11px;line-height:1.6;padding:8px 11px;border-radius:7px;white-space:nowrap;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.25);pointer-events:none}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1d2e}
+.tip-wrap:hover .tip-box,.tip-wrap.open .tip-box{display:block}
+@media(max-width:600px){.tip-box{left:auto;right:0;transform:none}.tip-box::after{left:auto;right:12px;transform:none}}
 </style>
 </head>
 <body>
@@ -453,9 +459,9 @@ function rOv(){
   const prf=ss.filter(s=>s['營業淨利']>0).length;
   document.getElementById('ov-kpi').innerHTML=`
     <div class="kc"><div class="kl">門市數</div><div class="kv">${ss.length}</div><div class="ks">獲利 ${prf} · 虧損 ${ss.length-prf}</div></div>
-    <div class="kc"><div class="kl">M05 收入 2026</div><div class="kv">${fM(rev)}</div><div class="ks">2025: ${fM(rev25)} <span class="${cls(yR)}">(${fPP(yR)})</span></div></div>
+    <div class="kc"><div class="kl">M05 收入 2026</div><div class="kv">${fM(rev)}</div><div class="ks">2025: ${fM(rev25)} <span class="${cls(yR)}">(${fPP(yR)})</span><span class="tip-wrap"><span class="tip-icon">i</span><span class="tip-box">全門市未調整 YoY<br>新店 5 間（AT05/AT08/AT02/AT04/AT07）無基期<br>閉店 2 間（AS65/AS74）仍計入基期</span></span></div></div>
     <div class="kc"><div class="kl">M05 淨利 2026</div><div class="kv" style="color:${nc(ni)}">${fM(ni)}</div><div class="ks">淨利率 ${fP(nir)} · 2025: ${fP(nir25)}</div></div>
-    <div class="kc"><div class="kl">YTD 收入 M01–M05</div><div class="kv">${fM(rYTD)}</div><div class="ks">2025: ${fM(rYTD25)} <span class="${cls(yRY)}">(${fPP(yRY)})</span></div></div>
+    <div class="kc"><div class="kl">YTD 收入 M01–M05</div><div class="kv">${fM(rYTD)}</div><div class="ks">2025: ${fM(rYTD25)} <span class="${cls(yRY)}">(${fPP(yRY)})</span><span class="tip-wrap"><span class="tip-icon">i</span><span class="tip-box">全門市未調整 YoY<br>新店 5 間（AT05/AT08/AT02/AT04/AT07）無基期<br>閉店 2 間（AS65/AS74）仍計入基期</span></span></div></div>
     <div class="kc"><div class="kl">YTD 淨利 M01–M05</div><div class="kv" style="color:${nc(nYTD)}">${fM(nYTD)}</div><div class="ks">YTD 淨利率 ${fP(nirY)} · 2025: ${fP(rYTD25>0?nYTD25/rYTD25:0)}</div></div>
     <div class="kc"><div class="kl">對比 LY 收入</div><div class="kv ${cls(yR)}">${fPP(yR)}</div><div class="ks">對比 LY 淨利 <span class="${cls(yN)}">${fPP(yN)}</span></div></div>`;
   rGrp('tb-d',ss,'課別');rGrp('tb-t',ss,'門市型態');
@@ -668,6 +674,11 @@ document.addEventListener('DOMContentLoaded',function(){
   if(sessionStorage.getItem('as_auth')==='1'){document.getElementById('login-overlay').style.display='none';return;}
   document.getElementById('dashboard-root').style.display='none';
   ['li-user','li-pwd'].forEach(id=>{document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});});
+});
+document.addEventListener('click',function(e){
+  const wrap=e.target.closest('.tip-wrap');
+  document.querySelectorAll('.tip-wrap.open').forEach(el=>{if(el!==wrap)el.classList.remove('open');});
+  if(wrap)wrap.classList.toggle('open');
 });
 async function sha256(msg){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}
 async function doLogin(){
