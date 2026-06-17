@@ -282,8 +282,8 @@ table.dt tr:last-child td{border-bottom:none}
 <div class="page active" id="page-ov">
   <div class="kbar" id="ov-kpi"></div>
   <div class="g2">
-    <div><div class="sec">課別損益 (M04)</div><div class="tw"><table class="t"><thead><tr><th>課別</th><th>店數</th><th>收入 26</th><th>淨利 26</th><th>淨利率</th><th>收入 25</th><th>對比 LY</th></tr></thead><tbody id="tb-d"></tbody></table></div></div>
-    <div><div class="sec">型態損益 (M04)</div><div class="tw"><table class="t"><thead><tr><th>型態</th><th>店數</th><th>收入 26</th><th>淨利 26</th><th>淨利率</th><th>收入 25</th><th>對比 LY</th></tr></thead><tbody id="tb-t"></tbody></table></div></div>
+    <div><div class="sec">課別損益 (M05)</div><div class="tw"><table class="t"><thead><tr><th>課別</th><th>店數</th><th>收入 26</th><th>淨利 26</th><th>淨利率</th><th>收入 25</th><th>對比 LY</th></tr></thead><tbody id="tb-d"></tbody></table></div></div>
+    <div><div class="sec">型態損益 (M05)</div><div class="tw"><table class="t"><thead><tr><th>型態</th><th>店數</th><th>收入 26</th><th>淨利 26</th><th>淨利率</th><th>收入 25</th><th>對比 LY</th></tr></thead><tbody id="tb-t"></tbody></table></div></div>
   </div>
   <div class="sec">全公司月趨勢 (2026 vs 2025)</div>
   <div class="card" style="padding:16px;margin-bottom:20px">
@@ -304,7 +304,7 @@ table.dt tr:last-child td{border-bottom:none}
     </div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-    <div class="sec" style="margin:0">獲利 TOP 10 (M04 淨利) 含 M01–M04 累積</div>
+    <div class="sec" style="margin:0">獲利 TOP 10 (M05 淨利) 含 M01–M05 累積</div>
     <div style="display:flex;gap:4px">
       <button class="tbtn active" data-val="top10" onclick="setTopMode(this)">TOP 10</button>
       <button class="tbtn" data-val="all" onclick="setTopMode(this)">全門市</button>
@@ -312,7 +312,7 @@ table.dt tr:last-child td{border-bottom:none}
   </div>
   <div class="scroll-hint"><span>← 左右滑動查看完整資料 →</span></div>
   <div class="rl" id="ov-top"></div>
-  <div class="sec" style="margin-top:20px">獲利 LAST 10 (M04 淨利) 含 M01–M04 累積</div>
+  <div class="sec" style="margin-top:20px">獲利 LAST 10 (M05 淨利) 含 M01–M05 累積</div>
   <div class="scroll-hint"><span>← 左右滑動查看完整資料 →</span></div>
   <div class="rl" id="ov-last10"></div>
 </div>
@@ -329,7 +329,7 @@ table.dt tr:last-child td{border-bottom:none}
     <div class="tw"><table class="dt">
       <thead style="background:var(--bg3)"><tr>
         <th>主管</th><th>倉庫編號</th><th>門市名稱</th><th>級別</th><th>支線</th>
-        <th>M04 收入</th><th>M04 淨利</th><th>M04 淨利率</th>
+        <th>M05 收入</th><th>M05 淨利</th><th>M05 淨利率</th>
         <th>YTD 收入</th><th>YTD 淨利</th><th>對比 LY</th>
         <th>人力</th><th>人均產值</th>
       </tr></thead>
@@ -351,11 +351,11 @@ table.dt tr:last-child td{border-bottom:none}
   <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end">
     <div class="fg"><div class="fl">排序</div>
       <select class="sel" id="rsort" onchange="rRank()" style="min-width:200px">
-        <option value="ni">M04 淨利 (高→低)</option>
-        <option value="ni_asc">M04 淨利 (低→高)</option>
+        <option value="ni">M05 淨利 (高→低)</option>
+        <option value="ni_asc">M05 淨利 (低→高)</option>
         <option value="ni_ytd">YTD 淨利 (高→低)</option>
-        <option value="rev">M04 收入 (高→低)</option>
-        <option value="nir">M04 淨利率 (高→低)</option>
+        <option value="rev">M05 收入 (高→低)</option>
+        <option value="nir">M05 淨利率 (高→低)</option>
         <option value="yoy">對比 LY 收入 (高→低)</option>
       </select>
     </div>
@@ -367,7 +367,7 @@ table.dt tr:last-child td{border-bottom:none}
   <div class="rl" id="rank-wrap">
     <div class="rh" style="grid-template-columns:32px minmax(100px,1fr) 75px 75px 65px 75px 75px 70px 65px 65px 65px 65px 65px 75px">
       <div style="text-align:center">#</div><div>門市</div>
-      <div>M04 收入</div><div>M04 淨利</div><div>淨利率</div>
+      <div>M05 收入</div><div>M05 淨利</div><div>淨利率</div>
       <div>YTD 收入</div><div>YTD 淨利</div><div>YTD 淨利率</div>
       <div>對比 LY</div><div>百貨費率</div><div>門市費率</div><div>總部費率</div><div>人力</div><div>人均產值</div>
     </div>
@@ -422,7 +422,7 @@ function renderRankedList(ss, mode, elId){
   if(mode==='last10') src=[...ss].sort((a,b)=>a['營業淨利']-b['營業淨利']).slice(0,10);
   else if(mode==='all') src=[...ss].sort((a,b)=>b['營業淨利']-a['營業淨利']);
   else src=[...ss].sort((a,b)=>b['營業淨利']-a['營業淨利']).slice(0,10);
-  el.innerHTML=`<div class="rh" style="grid-template-columns:${TC}"><div>#</div><div>門市</div><div>M04 收入</div><div>M04 淨利</div><div>YTD 收入</div><div>YTD 淨利</div><div>YTD 淨利率</div><div>人力</div><div>人均產值</div></div>`
+  el.innerHTML=`<div class="rh" style="grid-template-columns:${TC}"><div>#</div><div>門市</div><div>M05 收入</div><div>M05 淨利</div><div>YTD 收入</div><div>YTD 淨利</div><div>YTD 淨利率</div><div>人力</div><div>人均產值</div></div>`
   +src.map((s,i)=>{
     const ncM=nc(s['營業淨利']),ncY=nc(s['營業淨利_ytd26']);
     const isL=mode==='last10';
@@ -453,10 +453,10 @@ function rOv(){
   const prf=ss.filter(s=>s['營業淨利']>0).length;
   document.getElementById('ov-kpi').innerHTML=`
     <div class="kc"><div class="kl">門市數</div><div class="kv">${ss.length}</div><div class="ks">獲利 ${prf} · 虧損 ${ss.length-prf}</div></div>
-    <div class="kc"><div class="kl">M04 收入 2026</div><div class="kv">${fM(rev)}</div><div class="ks">2025: ${fM(rev25)} <span class="${cls(yR)}">(${fPP(yR)})</span></div></div>
-    <div class="kc"><div class="kl">M04 淨利 2026</div><div class="kv" style="color:${nc(ni)}">${fM(ni)}</div><div class="ks">淨利率 ${fP(nir)} · 2025: ${fP(nir25)}</div></div>
-    <div class="kc"><div class="kl">YTD 收入 M01–M04</div><div class="kv">${fM(rYTD)}</div><div class="ks">2025: ${fM(rYTD25)} <span class="${cls(yRY)}">(${fPP(yRY)})</span></div></div>
-    <div class="kc"><div class="kl">YTD 淨利 M01–M04</div><div class="kv" style="color:${nc(nYTD)}">${fM(nYTD)}</div><div class="ks">YTD 淨利率 ${fP(nirY)} · 2025: ${fP(rYTD25>0?nYTD25/rYTD25:0)}</div></div>
+    <div class="kc"><div class="kl">M05 收入 2026</div><div class="kv">${fM(rev)}</div><div class="ks">2025: ${fM(rev25)} <span class="${cls(yR)}">(${fPP(yR)})</span></div></div>
+    <div class="kc"><div class="kl">M05 淨利 2026</div><div class="kv" style="color:${nc(ni)}">${fM(ni)}</div><div class="ks">淨利率 ${fP(nir)} · 2025: ${fP(nir25)}</div></div>
+    <div class="kc"><div class="kl">YTD 收入 M01–M05</div><div class="kv">${fM(rYTD)}</div><div class="ks">2025: ${fM(rYTD25)} <span class="${cls(yRY)}">(${fPP(yRY)})</span></div></div>
+    <div class="kc"><div class="kl">YTD 淨利 M01–M05</div><div class="kv" style="color:${nc(nYTD)}">${fM(nYTD)}</div><div class="ks">YTD 淨利率 ${fP(nirY)} · 2025: ${fP(rYTD25>0?nYTD25/rYTD25:0)}</div></div>
     <div class="kc"><div class="kl">對比 LY 收入</div><div class="kv ${cls(yR)}">${fPP(yR)}</div><div class="ks">對比 LY 淨利 <span class="${cls(yN)}">${fPP(yN)}</span></div></div>`;
   rGrp('tb-d',ss,'課別');rGrp('tb-t',ss,'門市型態');
   renderRankedList(ss, getTopMode(), 'ov-top');
@@ -500,8 +500,8 @@ function rMgr(){
     return`<div class="mc" style="${isZ?'border-color:#fcd34d;background:#fffef5':''}">
       <div class="mc-hdr"><div class="mc-name">${k}${zsub}</div><div class="mc-n">${isZ?'北區 '+v.stores.length+' 店':v.stores.length+' 店'}</div></div>
       <div class="mc-m">
-        <div class="mm"><div class="mml">M04 收入 2026</div><div class="mmv">${fM(v.r)}</div><div class="mms"><span class="${cls(yoy)}">LY ${fPP(yoy)}</span></div></div>
-        <div class="mm"><div class="mml">M04 淨利 2026</div><div class="mmv" style="color:${nc(v.ni)}">${fM(v.ni)}</div><div class="mms">淨利率 ${fP(nir)}</div></div>
+        <div class="mm"><div class="mml">M05 收入 2026</div><div class="mmv">${fM(v.r)}</div><div class="mms"><span class="${cls(yoy)}">LY ${fPP(yoy)}</span></div></div>
+        <div class="mm"><div class="mml">M05 淨利 2026</div><div class="mmv" style="color:${nc(v.ni)}">${fM(v.ni)}</div><div class="mms">淨利率 ${fP(nir)}</div></div>
         <div class="mm"><div class="mml">收入 2025 同期</div><div class="mmv">${fM(v.r25)}</div><div class="mms">淨利 ${fM(v.ni25)}</div></div>
         <div class="mm"><div class="mml">YTD 淨利</div><div class="mmv" style="color:${nc(v.niY)}">${fM(v.niY)}</div><div class="mms">YTD 淨利率 ${fP(nirY)}</div></div>
       </div>
@@ -554,15 +554,15 @@ function rDet(){
   document.getElementById('sdet').innerHTML=`
     <div class="deta"><span class="mt">📍 ${s['縣市']}</span><span class="mt">${s['門市型態']}</span><span class="mt">${s['課別']}</span><span class="mt">主管: ${s['轄區負責人']}</span><span class="mt">支線: ${s['販售支線']}</span><span class="mt">坪數: ${s['坪數']||'—'}</span>${gb(s['級別'])} ${ob(s['原店非原店'])}<span class="mt">正職 ${s['全職']} · 兼職 ${s['兼職']}</span></div>
     <div class="dkpi">
-      <div class="kc"><div class="kl">M04 收入 2026</div><div class="kv">${fM(s['營業收入淨額'])}</div><div class="ks">2025: ${fM(s['營業收入淨額_25'])}</div></div>
-      <div class="kc"><div class="kl">M04 淨利 2026</div><div class="kv" style="color:${nc(s['營業淨利'])}">${fM(s['營業淨利'])}</div><div class="ks">2025: ${fM(s['營業淨利_25'])}</div></div>
+      <div class="kc"><div class="kl">M05 收入 2026</div><div class="kv">${fM(s['營業收入淨額'])}</div><div class="ks">2025: ${fM(s['營業收入淨額_25'])}</div></div>
+      <div class="kc"><div class="kl">M05 淨利 2026</div><div class="kv" style="color:${nc(s['營業淨利'])}">${fM(s['營業淨利'])}</div><div class="ks">2025: ${fM(s['營業淨利_25'])}</div></div>
       <div class="kc"><div class="kl">淨利率 26/25</div><div class="kv">${fP(s['ni_rate'])}</div><div class="ks">2025: ${fP(ni25)}</div></div>
       <div class="kc"><div class="kl">對比 LY 收入</div><div class="kv ${cls(yR)}">${fPP(yR)}</div><div class="ks">對比LY淨利 <span class="${cls(yN)}">${fPP(yN)}</span></div></div>
-      <div class="kc"><div class="kl">YTD 收入 M01–M04</div><div class="kv">${fM(s['營業收入淨額_ytd26'])}</div><div class="ks">2025: ${fM(s['營業收入淨額_ytd25'])}</div></div>
+      <div class="kc"><div class="kl">YTD 收入 M01–M05</div><div class="kv">${fM(s['營業收入淨額_ytd26'])}</div><div class="ks">2025: ${fM(s['營業收入淨額_ytd25'])}</div></div>
       <div class="kc"><div class="kl">YTD 淨利</div><div class="kv" style="color:${nc(s['營業淨利_ytd26'])}">${fM(s['營業淨利_ytd26'])}</div><div class="ks">YTD 淨利率 ${fP(s['ni_rate_ytd26']||0)}</div></div>
       <div class="kc"><div class="kl">人均產值</div><div class="kv">${ppv(s)}</div><div class="ks">正職${s['全職']} 兼職${s['兼職']} (FTE ${+s['全職']+(+s['兼職'])*0.5})</div></div>
     </div>
-    <div class="sec">費用率分析 (M04 2026)</div>
+    <div class="sec">費用率分析 (M05 2026)</div>
     <div class="rcards">
       <div class="rc"><div class="rcl">百貨費用率</div><div class="rcv">${fP(s['dept_rate'])}</div><div class="rcs">百貨費用 ${fK(s['百貨費用'])}</div></div>
       <div class="rc"><div class="rcl">門市費用率</div><div class="rcv">${fP(s['store_rate'])}</div><div class="rcs">門市費用 ${fK(s['門市費用'])}</div></div>
@@ -578,7 +578,7 @@ function rDet(){
       <div class="cc"><span class="ccl">其他門市費用</span><span class="ccv">${fK(s['其他門市費用'])}</span></div>
       <div class="cc"><span class="ccl">總部費用</span><span class="ccv">${fK(s['總部費用'])} <span style="font-size:11px;color:var(--text3)">${fP(s['hq_rate'])}</span></span></div>
     </div>
-    <div class="sec">月趨勢 (M01–M04)</div>
+    <div class="sec">月趨勢 (M01–M05)</div>
     <div class="card" style="padding:14px;margin-bottom:18px">
       <div class="trend-btns" id="det-tbtns">
         <button class="tbtn active" data-dm="rev">收入</button><button class="tbtn" data-dm="ni">淨利</button><button class="tbtn" data-dm="ni_rate">淨利率</button><button class="tbtn" data-dm="lab">用人費用</button><button class="tbtn" data-dm="elec">水電費</button><button class="tbtn" data-dm="rent">房屋租金</button><button class="tbtn" data-dm="comm">抽成佣金</button><button class="tbtn" data-dm="freight">運費</button>
@@ -591,7 +591,7 @@ function rDet(){
     </div>
     <div class="sec">損益三欄對比</div>
     <div class="tw"><table class="t">
-      <thead><tr><th>指標</th><th>M04 2026</th><th>M03 2026</th><th>M04 2025</th><th>對比 LY</th><th>MoM</th></tr></thead>
+      <thead><tr><th>指標</th><th>M05 2026</th><th>M04 2026</th><th>M05 2025</th><th>對比 LY</th><th>MoM</th></tr></thead>
       <tbody>
         <tr><td>營業收入淨額</td><td>${fK(s['營業收入淨額'])}</td><td>${fK(s['營業收入淨額_lm'])}</td><td>${fK(s['營業收入淨額_25'])}</td><td class="${cls(yR)}">${fPP(yR)}</td><td class="${cls(mR)}">${fPP(mR)}</td></tr>
         <tr><td>營業毛利</td><td>${fK(s['營業毛利'])}</td><td>${fK(s['營業毛利_lm'])}</td><td>${fK(s['營業毛利_25'])}</td><td>—</td><td>—</td></tr>
