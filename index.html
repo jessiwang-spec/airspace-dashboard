@@ -422,7 +422,7 @@ document.getElementById('co-tbtns').addEventListener('click',e=>{const b=e.targe
 
 // RANKED LIST renderer (shared for TOP10 and LAST10)
 function renderRankedList(ss, mode, elId){
-  const TC='32px 180px 95px 95px 95px 95px 90px 90px 100px';
+  const TC='32px 180px 95px 95px 95px 95px 95px 85px 110px';
   const el=document.getElementById(elId);if(!el)return;
   let src;
   if(mode==='last10') src=[...ss].sort((a,b)=>a['營業淨利']-b['營業淨利']).slice(0,10);
