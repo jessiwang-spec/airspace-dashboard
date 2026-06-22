@@ -371,7 +371,7 @@ table.dt tr:last-child td{border-bottom:none}
   </div>
   <div class="scroll-hint"><span>← 左右滑動查看完整資料 →</span></div>
   <div class="rl" id="rank-wrap">
-    <div class="rh" style="grid-template-columns:32px minmax(100px,1fr) 75px 75px 65px 75px 75px 70px 65px 65px 65px 65px 65px 75px">
+    <div class="rh" style="grid-template-columns:32px 180px 75px 75px 65px 75px 75px 70px 65px 65px 65px 65px 65px 75px">
       <div style="text-align:center">#</div><div>門市</div>
       <div style="text-align:right">M05 收入</div><div style="text-align:right">M05 淨利</div><div style="text-align:right">淨利率</div>
       <div style="text-align:right">YTD 收入</div><div style="text-align:right">YTD 淨利</div><div style="text-align:right">YTD 淨利率</div>
@@ -422,7 +422,7 @@ document.getElementById('co-tbtns').addEventListener('click',e=>{const b=e.targe
 
 // RANKED LIST renderer (shared for TOP10 and LAST10)
 function renderRankedList(ss, mode, elId){
-  const TC='32px minmax(130px,1fr) 95px 95px 95px 95px 80px 80px 95px';
+  const TC='32px 180px 95px 95px 95px 95px 80px 80px 95px';
   const el=document.getElementById(elId);if(!el)return;
   let src;
   if(mode==='last10') src=[...ss].sort((a,b)=>a['營業淨利']-b['營業淨利']).slice(0,10);
@@ -632,7 +632,7 @@ function rRank(){
   const ss=gf(),sort=document.getElementById('rsort').value,n=parseInt(document.getElementById('rn').value);
   const fns={ni:(a,b)=>b['營業淨利']-a['營業淨利'],ni_asc:(a,b)=>a['營業淨利']-b['營業淨利'],ni_ytd:(a,b)=>b['營業淨利_ytd26']-a['營業淨利_ytd26'],rev:(a,b)=>b['營業收入淨額']-a['營業收入淨額'],nir:(a,b)=>b['ni_rate']-a['ni_rate'],yoy:(a,b)=>(b['rev_yoy']??-99)-(a['rev_yoy']??-99)};
   const sorted=[...ss].sort(fns[sort]||fns.ni).slice(0,n===99?ss.length:n);
-  const RKC='32px minmax(100px,1fr) 75px 75px 65px 75px 75px 70px 65px 65px 65px 65px 65px 75px';
+  const RKC='32px 180px 75px 75px 65px 75px 75px 70px 65px 65px 65px 65px 65px 75px';
   document.getElementById('rrows').innerHTML=sorted.map((s,i)=>{
     const nc2=['gold','silver','bronze'][i]||'',niC=nc(s['營業淨利']),niYC=nc(s['營業淨利_ytd26']);
     return`<div class="rr" style="grid-template-columns:${RKC}">
