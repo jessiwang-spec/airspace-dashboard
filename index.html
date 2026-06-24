@@ -799,11 +799,14 @@ async function runAiAnalysis(){
   try{
     const summary=buildSummary();
     const prompt=`你是零售業損益分析專家。以下是台灣女裝品牌 AIRSPACE 的 ${summary.period} 損益摘要數據（共${summary.total_stores}間門市）：\n\n${JSON.stringify(summary,null,2)}\n\n請根據以上數據，以繁體中文產生四個維度的洞察分析。請嚴格按照以下 JSON 格式回傳，不要有任何額外文字：\n{\n  "global":{"title":"全公司整體","subtitle":"${summary.total_stores}間門市","insights":[{"tag":"良好|注意|警示|觀察","text":"洞察內容（可用**粗體**標記關鍵數字）"},...],"questions":[{"highlight":"關鍵詞","text":"具體問題"}]},\n  "type":{"title":"型態分析","subtitle":"百貨店vs街邊店","insights":[...],"questions":[...]},\n  "region":{"title":"城市維度","subtitle":"北中南區域比較","insights":[...],"questions":[...]},\n  "store_M05":{"warnings":[{"tag":"警示|注意","store":"門市名稱","text":"一句話說明"}],"highlights":[{"tag":"亮點|觀察","store":"門市名稱","text":"一句話說明"}],"questions":[...]},\n  "store_YTD":{"warnings":[...],"highlights":[...],"questions":[...]}\n}\n每個維度 insights 請給 4-5 條，questions 給 2 條，store 警示/亮點各 3 條。`;
-    const PROXY_URL='https://script.google.com/macros/s/AKfycbxkmrdPUDSD5sOoB5H_BgE6jqsmMP7XChPRPU2ve0wzIRJAqRn2gRJFhnwLH42EVe0p/exec';
+    const PROXY_URL='https://script.google.com/macros/s/AKfycbxXpG1ALasZ1vZbCp7_r490GRcQw0z1R0WP4N7uO8F6bi5cnUufKXHA_AnqG1bZMcLx/exec';
     const resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({prompt})});
     const data=await resp.json();
     if(!data.ok)throw new Error(data.error||'Proxy error');
-    const text=data.content.map(c=>c.text||'').join('');
+    let text='';
+    if(typeof data.content==='string')text=data.content;
+    else if(Array.isArray(data.content))text=data.content.map(c=>c.text||'').join('');
+    else throw new Error('回傳格式異常：'+JSON.stringify(data).slice(0,200));
     const clean=text.replace(/```json|```/g,'').trim();
     const result=JSON.parse(clean);
     renderAiCards(result);
