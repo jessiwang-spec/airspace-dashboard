@@ -83,6 +83,13 @@ table.t tbody tr:hover{background:var(--bg3)}
 .rr:last-child{border-bottom:none}
 .rr:hover{background:var(--bg3)}
 .rnum{text-align:center;font-weight:700;font-size:13px}
+#ov-top .stk,#ov-last10 .stk{position:sticky;z-index:2}
+#ov-top .stk1,#ov-last10 .stk1{left:0}
+#ov-top .stk2,#ov-last10 .stk2{left:40px}
+#ov-top .rh .stk,#ov-last10 .rh .stk{background:var(--bg3)}
+#ov-top .rr .stk,#ov-last10 .rr .stk{background:var(--bg2)}
+#ov-top .rr:hover .stk,#ov-last10 .rr:hover .stk{background:var(--bg3)}
+#ov-top .stk2::after,#ov-last10 .stk2::after{content:'';position:absolute;top:0;right:-1px;bottom:0;width:1px;background:var(--border)}
 .gold{color:var(--yellow)}.silver{color:#6b7280}.bronze{color:#92400e}
 .rn{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .rd{font-size:11px;color:var(--text2);margin-top:1px}
@@ -490,14 +497,14 @@ function renderRankedList(ss, mode, elId){
   if(mode==='last10') src=[...ss].sort((a,b)=>a['營業淨利']-b['營業淨利']).slice(0,10);
   else if(mode==='all') src=[...ss].sort((a,b)=>b['營業淨利']-a['營業淨利']);
   else src=[...ss].sort((a,b)=>b['營業淨利']-a['營業淨利']).slice(0,10);
-  el.innerHTML=`<div class="rh" style="grid-template-columns:${TC}"><div>#</div><div>門市</div><div style="text-align:right">M05 收入</div><div style="text-align:right">M05 淨利</div><div style="text-align:right">YTD 收入</div><div style="text-align:right">YTD 淨利</div><div style="text-align:right">YTD 淨利率</div><div style="padding-left:20px">人力</div><div style="text-align:right">人均產值</div></div>`
+  el.innerHTML=`<div class="rh" style="grid-template-columns:${TC}"><div class="stk stk1">#</div><div class="stk stk2">門市</div><div style="text-align:right">M05 收入</div><div style="text-align:right">M05 淨利</div><div style="text-align:right">YTD 收入</div><div style="text-align:right">YTD 淨利</div><div style="text-align:right">YTD 淨利率</div><div style="padding-left:20px">人力</div><div style="text-align:right">人均產值</div></div>`
   +src.map((s,i)=>{
     const ncM=nc(s['營業淨利']),ncY=nc(s['營業淨利_ytd26']);
     const isL=mode==='last10';
     const nCls=isL?'style="color:var(--red)"':`class="${['gold','silver','bronze'][i]||''}"`;
     return`<div class="rr" style="grid-template-columns:${TC}">
-      <div class="rnum" ${nCls}>${i+1}</div>
-      <div><div class="rn">${s['倉庫名稱']}</div><div class="rd">${s['課別']} · ${s['轄區負責人']} · ${gb(s['級別'])}</div></div>
+      <div class="rnum stk stk1" ${nCls}>${i+1}</div>
+      <div class="stk stk2"><div class="rn">${s['倉庫名稱']}</div><div class="rd">${s['課別']} · ${s['轄區負責人']} · ${gb(s['級別'])}</div></div>
       <div style="text-align:right">${fM(s['營業收入淨額'])}</div>
       <div style="text-align:right;color:${ncM};font-weight:600">${fM(s['營業淨利'])}</div>
       <div style="text-align:right">${fM(s['營業收入淨額_ytd26'])}</div>
