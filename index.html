@@ -400,7 +400,7 @@ table.dt tr:last-child td{border-bottom:none}
       <div style="text-align:center">#</div><div>門市</div>
       <div style="text-align:right">M05 收入</div><div style="text-align:right">M05 淨利</div><div style="text-align:right">淨利率</div>
       <div style="text-align:right">YTD 收入</div><div style="text-align:right">YTD 淨利</div><div style="text-align:right">YTD 淨利率</div>
-      <div style="text-align:right">對比 LY</div><div style="text-align:right">百貨費率</div><div style="text-align:right">門市費率</div><div style="text-align:right">總部費率</div><div style="padding-left:14px">人力</div><div style="text-align:right">人均產值</div>
+      <div style="text-align:right">對比 LY</div><div style="text-align:right">百貨費率</div><div style="text-align:right">門市費率</div><div style="text-align:right">總部費率</div><div style="padding-left:20px">人力</div><div style="text-align:right">人均產值</div>
     </div>
     <div id="rrows"></div>
   </div>
@@ -490,7 +490,7 @@ function renderRankedList(ss, mode, elId){
   if(mode==='last10') src=[...ss].sort((a,b)=>a['營業淨利']-b['營業淨利']).slice(0,10);
   else if(mode==='all') src=[...ss].sort((a,b)=>b['營業淨利']-a['營業淨利']);
   else src=[...ss].sort((a,b)=>b['營業淨利']-a['營業淨利']).slice(0,10);
-  el.innerHTML=`<div class="rh" style="grid-template-columns:${TC}"><div>#</div><div>門市</div><div style="text-align:right">M05 收入</div><div style="text-align:right">M05 淨利</div><div style="text-align:right">YTD 收入</div><div style="text-align:right">YTD 淨利</div><div style="text-align:right">YTD 淨利率</div><div style="padding-left:14px">人力</div><div style="text-align:right">人均產值</div></div>`
+  el.innerHTML=`<div class="rh" style="grid-template-columns:${TC}"><div>#</div><div>門市</div><div style="text-align:right">M05 收入</div><div style="text-align:right">M05 淨利</div><div style="text-align:right">YTD 收入</div><div style="text-align:right">YTD 淨利</div><div style="text-align:right">YTD 淨利率</div><div style="padding-left:20px">人力</div><div style="text-align:right">人均產值</div></div>`
   +src.map((s,i)=>{
     const ncM=nc(s['營業淨利']),ncY=nc(s['營業淨利_ytd26']);
     const isL=mode==='last10';
@@ -503,7 +503,7 @@ function renderRankedList(ss, mode, elId){
       <div style="text-align:right">${fM(s['營業收入淨額_ytd26'])}</div>
       <div style="text-align:right;color:${ncY};font-weight:600">${fM(s['營業淨利_ytd26'])}</div>
       <div style="text-align:right" class="${cls(s['ni_rate_ytd26'])}">${fP(s['ni_rate_ytd26']||0)}</div>
-      <div style="font-size:11px;color:var(--text2);padding-left:14px">正${s['全職']} 兼${s['兼職']}</div>
+      <div style="font-size:11px;color:var(--text2);padding-left:20px">正${s['全職']} 兼${s['兼職']}</div>
       <div style="text-align:right;font-size:12px;color:var(--text2)">${ppv(s)}</div>
     </div>`;
   }).join('');
@@ -704,7 +704,7 @@ function rRank(){
       <div style="text-align:right">${fM(s['營業收入淨額_ytd26'])}</div><div style="text-align:right;color:${niYC};font-weight:600">${fM(s['營業淨利_ytd26'])}</div><div style="text-align:right;color:${niYC}">${fP(s['ni_rate_ytd26']||0)}</div>
       <div style="text-align:right" class="${cls(s['rev_yoy'])}">${fPP(s['rev_yoy'])}</div>
       <div style="text-align:right;color:var(--text2)">${fP(s['dept_rate'])}</div><div style="text-align:right;color:var(--text2)">${fP(s['store_rate'])}</div><div style="text-align:right;color:var(--text2)">${fP(s['hq_rate'])}</div>
-      <div style="font-size:11px;color:var(--text2);padding-left:14px">正${s['全職']} 兼${s['兼職']}</div>
+      <div style="font-size:11px;color:var(--text2);padding-left:20px">正${s['全職']} 兼${s['兼職']}</div>
       <div style="text-align:right;font-size:12px;color:var(--text2)">${ppv(s)}</div>
     </div>`;
   }).join('');
