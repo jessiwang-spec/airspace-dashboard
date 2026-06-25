@@ -425,10 +425,11 @@ table.dt tr:last-child td{border-bottom:none}
       <div id="ai-card-global" class="ai-card"></div>
       <div id="ai-card-type" class="ai-card"></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
       <div id="ai-card-region" class="ai-card"></div>
       <div id="ai-card-store" class="ai-card"></div>
     </div>
+    <div id="ai-card-hr" class="ai-card"></div>
   </div>
   <div id="ai-loading" style="display:none;text-align:center;padding:40px;color:var(--text2);font-size:13px">
     <div style="font-size:28px;margin-bottom:12px">⏳</div>
@@ -753,24 +754,12 @@ document.addEventListener('click',function(e){
 // AI 分析
 let aiPwCallback=null;
 function aiAnalyze(){
-  document.getElementById('ai-pw-modal').style.cssText='display:flex;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center';
-  document.getElementById('ai-pw-input').value='';
-  document.getElementById('ai-pw-err').style.display='none';
-  setTimeout(()=>document.getElementById('ai-pw-input').focus(),100);
+  runAiAnalysis();
 }
 function aiPwCancel(){
   document.getElementById('ai-pw-modal').style.display='none';
 }
 async function aiPwConfirm(){
-  const pw=document.getElementById('ai-pw-input').value;
-  const hash=await sha256(pw);
-  const correct=await sha256('52800995');
-  if(hash!==correct){
-    const err=document.getElementById('ai-pw-err');
-    err.textContent='密碼錯誤，請重試';
-    err.style.display='block';
-    return;
-  }
   document.getElementById('ai-pw-modal').style.display='none';
   runAiAnalysis();
 }
@@ -866,6 +855,30 @@ function computeInsights(){
   const ytdWarn=[...ytdActive].sort((a,b)=>a.ni_rate_ytd26-b.ni_rate_ytd26).slice(0,3).map(s=>({tag:s.ni_rate_ytd26<0?'警示':'注意',store:`${s.倉庫編號} ${s.倉庫名稱}`,text:`YTD 淨利率 ${fmtPct(s.ni_rate_ytd26)}，累積淨利 ${fmtM(s.營業淨利_ytd26)}。`}));
   const ytdHigh=[...ytdActive].sort((a,b)=>b.ni_rate_ytd26-a.ni_rate_ytd26).slice(0,3).map(s=>({tag:'亮點',store:`${s.倉庫編號} ${s.倉庫名稱}`,text:`YTD 淨利率 ${fmtPct(s.ni_rate_ytd26)}，累積淨利 ${fmtM(s.營業淨利_ytd26)}。`}));
 
+  // ===== 人力分析 (FTE = 正職×1 + 兼職×0.5) =====
+  const fteOf=s=>(s.全職||0)*1+(s.兼職||0)*0.5;
+  const hrRows=active.filter(s=>fteOf(s)>0).map(s=>({s,fte:fteOf(s),ppv:s.營業收入淨額/fteOf(s),pni:s.營業淨利/fteOf(s),lr:s.labor_rate||0}));
+  const avgPpv=sum(active,'營業收入淨額')/active.filter(s=>fteOf(s)>0).reduce((a,s)=>a+fteOf(s),0);
+  const avgLr=hrRows.reduce((a,r)=>a+r.lr,0)/hrRows.length;
+  const nm=s=>`${s.倉庫編號} ${s.倉庫名稱}`;
+  const hrIns=[];
+  // 1. 人均產值排名
+  const byPpv=[...hrRows].sort((a,b)=>b.ppv-a.ppv);
+  hrIns.push({tag:'良好',text:`人均產值最高 <b>${nm(byPpv[0].s)}</b> ${(byPpv[0].ppv/1000).toFixed(0)}K／FTE；最低 <b>${nm(byPpv[byPpv.length-1].s)}</b> ${(byPpv[byPpv.length-1].ppv/1000).toFixed(0)}K（依 FTE 人均產值排序）。`});
+  // 2. vs 平均 ±20%
+  const hi20=byPpv.filter(r=>r.ppv>=avgPpv*1.2);
+  const lo20=[...hrRows].filter(r=>r.ppv<=avgPpv*0.8).sort((a,b)=>a.ppv-b.ppv);
+  if(hi20.length)hrIns.push({tag:'良好',text:`高於全公司平均 (${(avgPpv/1000).toFixed(0)}K) 20% 以上共 <b>${hi20.length}</b> 間，含 ${hi20.slice(0,3).map(r=>nm(r.s)).join('、')}（門檻：人均產值 ≥ 平均×1.2）。`});
+  if(lo20.length)hrIns.push({tag:'注意',text:`低於平均 20% 以上共 <b>${lo20.length}</b> 間，含 ${lo20.slice(0,3).map(r=>nm(r.s)).join('、')}，人效待改善（門檻：人均產值 ≤ 平均×0.8）。`});
+  // 3. 用人費用率高於平均5pp
+  const hiLr=[...hrRows].filter(r=>r.lr>=avgLr+0.05).sort((a,b)=>b.lr-a.lr);
+  if(hiLr.length)hrIns.push({tag:'注意',text:`用人費用率高於全公司平均 (${fmtPct(avgLr)}) 5pp 以上共 <b>${hiLr.length}</b> 間，最高 ${hiLr.slice(0,2).map(r=>`${nm(r.s)} ${fmtPct(r.lr)}`).join('、')}（門檻：用人費用率 ≥ 平均+5pp）。`});
+  // 4. 人均淨利
+  const byPni=[...hrRows].sort((a,b)=>b.pni-a.pni);
+  const negPni=byPni.filter(r=>r.pni<0);
+  hrIns.push({tag:'良好',text:`每 FTE 淨利最高 <b>${nm(byPni[0].s)}</b> ${(byPni[0].pni/1000).toFixed(0)}K；${negPni.length?`其中 <b>${negPni.length}</b> 間為負值需檢視（${negPni.slice(0,2).map(r=>nm(r.s)).join('、')}）`:'全數為正'}（門檻：人均淨利 < 0 標警示）。`});
+  if(negPni.length)hrIns.push({tag:'警示',text:`人均淨利為負門市：${negPni.map(r=>`<b>${nm(r.s)}</b> ${(r.pni/1000).toFixed(0)}K`).join('、')}，每位人力（FTE）平均虧損，建議檢視人力成本配置。`});
+
   return{
     global:{title:'全公司整體',subtitle:`${stores.length} 間門市 · M01–M05`,insights:gIns,questions:[
       {highlight:'運費上升',text:'是否與特定配送路線或供應商有關？可調閱物流明細確認。'},
@@ -882,6 +895,9 @@ function computeInsights(){
     store_YTD:{warnings:ytdWarn,highlights:ytdHigh,questions:[
       {highlight:ytdWarn[0]?ytdWarn[0].store.split(' ')[1]||ytdWarn[0].store:'累積虧損門市',text:'YTD 持續虧損的根因為何？是否需調整營運策略？'},
       {highlight:ytdHigh[0]?ytdHigh[0].store.split(' ')[1]||ytdHigh[0].store:'高績效門市',text:'是否可作為標竿門市，分享經營經驗？'}]},
+    hr:{title:'人力分析',subtitle:`${hrRows.length} 間門市（排除閉店）`,note:'人均產值 = 營收 ÷ FTE｜人均淨利 = 淨利 ÷ FTE｜FTE = 正職×1 + 兼職×0.5',insights:hrIns,questions:[
+      {highlight:'人效偏低門市',text:'人均產值低於平均，是人力配置過多還是業績問題？'},
+      {highlight:'人均淨利為負',text:'每位人力平均虧損，人力成本是否需重新檢視？'}]},
   };
 }
 
@@ -890,8 +906,8 @@ function mkInsights(arr){return(arr||[]).map(i=>`<div class="ai-insight"><span c
 function mkQuestions(arr){return(arr||[]).length?`<div class="ai-q-block">${(arr||[]).map(q=>`<div class="ai-q-item">❓ <div class="ai-q-text"><span>${q.highlight}</span> ${q.text}</div></div>`).join('')}</div>`:''}
 function mkStoreList(arr){return(arr||[]).map(s=>`<div class="ai-insight"><span class="ai-tag ${TAG_CLASS[s.tag]||'ai-tag-info'}">${s.tag}</span><span class="ai-text"><b>${s.store}</b> ${s.text}</span></div>`).join('');}
 function renderAiCards(r){
-  const icons={global:'🏢',type:'🏬',region:'📍',store:'⚠️'};
-  const colors={global:'background:#e0f2fe',type:'background:#dcfce7',region:'background:#fef9c3',store:'background:#fee2e2'};
+  const icons={global:'🏢',type:'🏬',region:'📍',store:'⚠️',hr:'👥'};
+  const colors={global:'background:#e0f2fe',type:'background:#dcfce7',region:'background:#fef9c3',store:'background:#fee2e2',hr:'background:#ede9fe'};
   document.getElementById('ai-card-global').innerHTML=`<div class="ai-card-hd"><div class="ai-card-icon" style="${colors.global}">${icons.global}</div><div><div class="ai-card-title">${r.global.title}</div><div class="ai-card-sub">${r.global.subtitle}</div></div></div>${mkInsights(r.global.insights)}${mkQuestions(r.global.questions)}`;
   document.getElementById('ai-card-type').innerHTML=`<div class="ai-card-hd"><div class="ai-card-icon" style="${colors.type}">${icons.type}</div><div><div class="ai-card-title">${r.type.title}</div><div class="ai-card-sub">${r.type.subtitle}</div></div></div>${mkInsights(r.type.insights)}${mkQuestions(r.type.questions)}`;
   document.getElementById('ai-card-region').innerHTML=`<div class="ai-card-hd"><div class="ai-card-icon" style="${colors.region}">${icons.region}</div><div><div class="ai-card-title">${r.region.title}</div><div class="ai-card-sub">${r.region.subtitle}</div></div></div>${mkInsights(r.region.insights)}${mkQuestions(r.region.questions)}`;
@@ -903,6 +919,8 @@ function renderAiCards(r){
   }
   window._storeTab=function(m){storeMode=m;renderStoreCard();};
   renderStoreCard();
+  // 人力分析卡片
+  document.getElementById('ai-card-hr').innerHTML=`<div class="ai-card-hd"><div class="ai-card-icon" style="${colors.hr}">${icons.hr}</div><div><div class="ai-card-title">${r.hr.title}</div><div class="ai-card-sub">${r.hr.subtitle}</div></div></div><div style="font-size:12px;color:var(--text3);background:var(--bg3);border-radius:6px;padding:8px 10px;margin-bottom:12px;line-height:1.5">📐 ${r.hr.note}</div>${mkInsights(r.hr.insights)}${mkQuestions(r.hr.questions)}`;
 }
 
 async function sha256(msg){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}
